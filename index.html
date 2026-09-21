@@ -375,7 +375,6 @@
   const btnMusic = document.getElementById('music');
   const icoPlay = document.getElementById('icoPlay');
   const icoPause = document.getElementById('icoPause');
-  let actx = null, master = null, playing = false, timer = null, step = 0;
 
   // Progresión suave: C - Am - F - G (frecuencias en Hz)
   const chords = [
@@ -413,18 +412,27 @@
 const audio = new Audio('flores.mp3.mp3');
 audio.loop = true;
 audio.volume = 0.7;
+audio.preload = 'none';
+audio.autoplay = false;
+
+let playing = false;
+icoPlay.style.display = '';
+icoPause.style.display = 'none';
 
 function startMusic() {
-  audio.play();
-  playing = true;
-  icoPlay.style.display = 'none'; icoPause.style.display = '';
+  audio.play().then(() => {
+    playing = true;
+    icoPlay.style.display = 'none';
+    icoPause.style.display = '';
+  }).catch(err => console.error('Audio:', err));
 }
 function stopMusic() {
   audio.pause();
   playing = false;
-  icoPlay.style.display = ''; icoPause.style.display = 'none';
+  icoPlay.style.display = '';
+  icoPause.style.display = 'none';
 }
-  btnMusic.addEventListener('click', () => playing ? stopMusic() : startMusic());
+btnMusic.addEventListener('click', () => playing ? stopMusic() : startMusic());
 
   /* ---------- Confeti + dedicatoria ---------- */
   const modal = document.getElementById('modal');
